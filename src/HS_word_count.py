@@ -31,12 +31,13 @@ Outputs::
 # import all libraries here
 import sys
 import os
+import shutil
 from collections import Counter
 from re import split
 
-def write_results(outputfileName,texttowrite):
+def write_results(outputFileName,texttowrite):
     # write the word count to this file
-    with open(outputfileName, 'a') as outfile:
+    with open(outputFileName, 'a') as outfile:
         outfile.write(texttowrite)
         
 
@@ -49,10 +50,10 @@ def format_print(outputFileName, counterholder, is_reverse=False):
         write_results(outputFileName,texttowrite)
 
 
-def count_words(inputfileName):
+def count_words(inputFileName):
     # count function
     counterholder = Counter()
-    with open(inputfileName,"rU") as fileholder:
+    with open(inputFileName,"rU") as fileholder:
         for line in fileholder:
             line = line.strip().lower()
             if not line:
@@ -63,11 +64,13 @@ def count_words(inputfileName):
     return counterholder
 
 
-def main(wcInput,outputFileName):
+def main(inputFileName,outputFileName):
     # The main function starts here
-    print(wcInput)
+    print(inputFileName)
     print(outputFileName)
-    format_print(outputFileName,count_words(wcInput),\
+	if os.path.isfile(outputFileName):
+		os.remove(outputFileName)
+    format_print(outputFileName,count_words(inputFileName),\
                  is_reverse=False)
     
 
