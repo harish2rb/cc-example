@@ -34,16 +34,19 @@ import os
 from collections import Counter
 from re import split
 
-BANNER = "-" * 35
+def write_results(outputfileName,texttowrite):
+    # write the word count to this file
+    with open(outputfileName, 'a') as outfile:
+        outfile.write(texttowrite)
+        
 
-def format_print(counter, is_reverse=False):
-    lst = counter.items()
-    lst.sort(key=lambda (a, b): (b, a), reverse=is_reverse)
-    print ("[Unique Words: %d]" % len(lst)).center(35, "=")
-    print "%-16s | %16s" % ("Word", "Count")
-    print BANNER
-    for word, count in lst:
-        print "%-16s | %16d" % (word, count)
+def format_print(outputFileName, counterholder, is_reverse=False):
+    listitems = counterholder.items()
+    listitems.sort(key=lambda (a, b): (b, a),\
+                   reverse=is_reverse)
+    for word, count in listitems:
+        texttowrite = "%-16s %16d \n" % (word, count)
+        write_results(outputFileName,texttowrite)
 
 
 def count_words(inputfileName):
@@ -64,8 +67,7 @@ def main(wcInput,outputFileName):
     # The main function starts here
     print(wcInput)
     print(outputFileName)
-    #count_words(wcInput)
-    format_print(count_words(wcInput),\
+    format_print(outputFileName,count_words(wcInput),\
                  is_reverse=False)
     
 
