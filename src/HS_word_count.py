@@ -31,7 +31,6 @@ Outputs::
 # import all libraries here
 import sys
 import os
-import shutil
 from collections import Counter
 from re import split
 
@@ -68,8 +67,8 @@ def main(inputFileName,outputFileName):
     # The main function starts here
     print(inputFileName)
     print(outputFileName)
-	if os.path.isfile(outputFileName):
-		os.remove(outputFileName)
+    if os.path.isfile(outputFileName):
+        os.remove(outputFileName)
     format_print(outputFileName,count_words(inputFileName),\
                  is_reverse=False)
     
