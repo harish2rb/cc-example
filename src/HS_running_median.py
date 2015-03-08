@@ -1,7 +1,7 @@
 #HS_runnning_median.py
 """
 Program Description:..
-Estimate the running median
+Estimate the running median of the input file,
 which keeps track of the median for a stream of numbers,
 updating the median for each new number
 -----------
