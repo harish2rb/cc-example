@@ -33,6 +33,7 @@ import sys
 import os
 from collections import Counter
 from re import split
+import string
 
 def write_results(outputFileName,texttowrite):
     # write the word count to this file
@@ -41,41 +42,50 @@ def write_results(outputFileName,texttowrite):
         
 
 def format_print(outputFileName, counterholder, is_reverse=False):
+    # formating file contents to write into the results file
     listitems = counterholder.items()
-    listitems.sort(key=lambda (a, b): (b, a),\
+    listitems.sort(key=lambda (a, b): (a, b),\
                    reverse=is_reverse)
     for word, count in listitems:
         texttowrite = "%-16s %16d \n" % (word, count)
         write_results(outputFileName,texttowrite)
 
 
-def count_words(inputFileName):
-    # count function
+def count_words(wcInputfolder,inputFileList):
+    # word count function
     counterholder = Counter()
-    with open(inputFileName,"rU") as fileholder:
-        for line in fileholder:
-            line = line.strip().lower()
-            if not line:
-                continue
-            counterholder.update(x for x in \
+    for filename in inputFileList:
+        inputFileName = wcInputfolder+"\\"+filename
+        with open(inputFileName,"rU") as fileholder:
+            for line in fileholder:
+                line = line.strip().lower()
+                # removes punctuation from the words
+                lineout = line.translate(string.maketrans("",""), string.punctuation)
+                if not lineout:
+                    continue
+                counterholder.update(x for x in \
                                  split("[^a-zA-Z']+",\
-                                       line) if x)
+                                       lineout) if x)
     return counterholder
 
+def case_insensitive_cmp(a, b):
+    # This will arrange files alphabatically without
+    # considering the case of the file name
+    return cmp(a.upper(), b.upper())
 
-def main(inputFileName,outputFileName):
-    # The main function starts here
-    print(inputFileName)
-    print(outputFileName)
+
+def main(wcInputfolder,inputFileList,outputFileName):
+    # The main function starts here calling other functions
     if os.path.isfile(outputFileName):
         os.remove(outputFileName)
-    format_print(outputFileName,count_words(inputFileName),\
+    format_print(outputFileName,count_words(wcInputfolder,inputFileList),\
                  is_reverse=False)
     
 
 if __name__ == "__main__":
     # Read the program arguments
-    # into appropriate variables
-    wcInput = sys.argv[1]
-    outputFileName = sys.argv[2]
-    main(wcInput,outputFileName)
+    wcInputfolder = sys.argv[1] # input folder path
+    inputFileList =  os.listdir(wcInputfolder) # list all files in input folder path
+    inputFileList.sort(case_insensitive_cmp) # sort them alphabatically
+    outputFileName = sys.argv[2] # output file path
+    main(wcInputfolder,inputFileList,outputFileName)
